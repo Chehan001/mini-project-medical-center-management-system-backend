@@ -15,7 +15,6 @@ const app = express();
 // Models & Routes 
 import User from "./models/userModel.js";
 import StudentPersonalData from "./models/StudentPersonalDataModel.js";
-
 import StudentPersonalDataRoutes from "./routes/StudentPersonalDataRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
@@ -23,8 +22,9 @@ import smsRoutes from "./routes/smsRoutes.js";
 import appointmentsRoutes from "./routes/appointmentsRoutes.js";
 import adminAppointmentRoutes from "./routes/adminAppointmentsRoutes.js";
 import entryRoutes from "./routes/entryRoutes.js";
-import doctorRoutes from "./routes/doctorRoutes.js"; 
-import medicineRoutes from "./routes/medicineRoutes.js"; // NEW: Medicine routes
+import doctorRoutes from "./routes/doctorRoutes.js";
+import studentMedicineRoutes from "./routes/studentMedicineRoutes.js";
+import medicineStockRoutes from "./routes/medicineStockRoutes.js";
 
 // Middleware 
 app.use(
@@ -50,8 +50,10 @@ app.use("/api/sms", smsRoutes);
 app.use("/api/appointments", appointmentsRoutes);
 app.use("/api/appointments", adminAppointmentRoutes);
 app.use("/api/entries", entryRoutes);
-app.use("/api/doctor", doctorRoutes); 
-app.use("/api/medicine", medicineRoutes); // NEW: Medicine stock routes
+app.use("/api/doctor", doctorRoutes);
+app.use("/api/studentMedicine", studentMedicineRoutes);
+app.use("/api/medicineStock", medicineStockRoutes);
+
 
 // Working Hours + Holidays 
 const holidays = [
