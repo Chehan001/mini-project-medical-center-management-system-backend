@@ -1,11 +1,12 @@
 import MedicineStock from "../models/medicineStockModel.js";
 import DistributionHistory from "../models/DistributionHistoryModel.js";
 
-// Add new medicine or update existing stock
+// Add_new_medicine/update_existing_stock
 export const addMedicine = async (req, res) => {
   try {
     const { name, quantity, manufacturingDate, expiryDate, licenseNumber } = req.body;
 
+    // Validate_input
     if (!name || !quantity || !manufacturingDate || !expiryDate || !licenseNumber) {
       return res.status(400).json({ message: "All fields are required" });
     }
@@ -26,21 +27,22 @@ export const addMedicine = async (req, res) => {
 
     const trimmedLicense = licenseNumber.trim().toUpperCase();
 
-    // Check for existing medicine by license number
+    // Check -- > medicinealready exists by license number
     const existing = await MedicineStock.findOne({ licenseNumber: trimmedLicense });
     if (existing) {
       existing.quantity += parsedQuantity;
       existing.updatedAt = new Date();
       if (expDate > existing.expiryDate) existing.expiryDate = expDate;
       await existing.save();
+
       return res.status(200).json({
-        message: `Stock updated! Added ${parsedQuantity} units. Total: ${existing.quantity}`,
+        message: `Stock updated successfully. Added ${parsedQuantity} units. Total: ${existing.quantity}`,
         medicine: existing
       });
     }
 
     // Add new medicine entry
-    const newMed = await MedicineStock.create({
+    const newMedicine = await MedicineStock.create({
       name: name.trim(),
       quantity: parsedQuantity,
       manufacturingDate: mfgDate,
@@ -48,10 +50,16 @@ export const addMedicine = async (req, res) => {
       licenseNumber: trimmedLicense,
     });
 
-    res.status(201).json({ message: "New medicine added successfully", medicine: newMed });
+    return res.status(201).json({
+      message: "New medicine added successfully",
+      medicine: newMedicine
+    });
   } catch (err) {
-    console.error("Error adding medicine:", err);
-    res.status(500).json({ message: "Server error while adding medicine", error: err.message });
+    console.error(" Error adding medicine:", err);
+    return res.status(500).json({
+      message: "Failed to add medicine. Please try again.",
+      error: err.message
+    });
   }
 };
 
@@ -59,10 +67,10 @@ export const addMedicine = async (req, res) => {
 export const getStock = async (req, res) => {
   try {
     const meds = await MedicineStock.find().sort({ updatedAt: -1 }).lean();
-    res.status(200).json(meds);
+    return res.status(200).json(meds);
   } catch (err) {
-    console.error("Error fetching stock:", err);
-    res.status(500).json({ message: "Failed to fetch stock", error: err.message });
+    console.error(" Error fetching stock:", err);
+    return res.status(500).json({ message: "Failed to fetch stock", error: err.message });
   }
 };
 
@@ -106,13 +114,16 @@ export const distributeMedicine = async (req, res) => {
       distributedAt: new Date(),
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       message: `Successfully distributed ${parsedQuantity} units of ${medicine.name}. Remaining stock: ${medicine.quantity}`,
       medicine,
     });
   } catch (err) {
-    console.error("Error distributing medicine:", err);
-    res.status(500).json({ message: "Server error while distributing medicine", error: err.message });
+    console.error(" Error distributing medicine:", err);
+    return res.status(500).json({
+      message: "Server error while distributing medicine",
+      error: err.message
+    });
   }
 };
 
@@ -123,25 +134,26 @@ export const getDistributionHistory = async (req, res) => {
       .sort({ distributedAt: -1 })
       .limit(100)
       .lean();
-    res.status(200).json(history);
+    return res.status(200).json(history);
   } catch (err) {
-    console.error("Error fetching distribution history:", err);
-    res.status(500).json({ message: "Failed to fetch distribution history", error: err.message });
+    console.error(" Error fetching distribution history:", err);
+    return res.status(500).json({ message: "Failed to fetch distribution history", error: err.message });
   }
 };
 
-// Get low stock
+// Get low stock medicines (<10 units)
 export const getLowStock = async (req, res) => {
   try {
     const lowStockMeds = await MedicineStock.find({ quantity: { $lt: 10 } })
       .sort({ quantity: 1 })
       .lean();
-    res.status(200).json(lowStockMeds);
+    return res.status(200).json(lowStockMeds);
   } catch (err) {
-    console.error("Error fetching low stock:", err);
-    res.status(500).json({ message: "Failed to fetch low stock medicines", error: err.message });
+    console.error(" Error fetching low stock:", err);
+    return res.status(500).json({ message: "Failed to fetch low stock medicines", error: err.message });
   }
 };
+
 
 // Get expired medicines
 export const getExpiredMedicines = async (req, res) => {
@@ -150,14 +162,14 @@ export const getExpiredMedicines = async (req, res) => {
     const expiredMeds = await MedicineStock.find({ expiryDate: { $lt: today } })
       .sort({ expiryDate: 1 })
       .lean();
-    res.status(200).json(expiredMeds);
+    return res.status(200).json(expiredMeds);
   } catch (err) {
-    console.error("Error fetching expired medicines:", err);
-    res.status(500).json({ message: "Failed to fetch expired medicines", error: err.message });
+    console.error(" Error fetching expired medicines:", err);
+    return res.status(500).json({ message: "Failed to fetch expired medicines", error: err.message });
   }
 };
 
-// Delete medicine
+// Delete a medicine by ID
 export const deleteMedicine = async (req, res) => {
   try {
     const { id } = req.params;
@@ -167,9 +179,9 @@ export const deleteMedicine = async (req, res) => {
       return res.status(404).json({ message: "Medicine not found" });
     }
 
-    res.status(200).json({ message: `Medicine "${medicine.name}" deleted successfully` });
+    return res.status(200).json({ message: `Medicine "${medicine.name}" deleted successfully` });
   } catch (err) {
-    console.error("Error deleting medicine:", err);
-    res.status(500).json({ message: "Server error while deleting medicine", error: err.message });
+    console.error(" Error deleting medicine:", err);
+    return res.status(500).json({ message: "Server error while deleting medicine", error: err.message });
   }
 };

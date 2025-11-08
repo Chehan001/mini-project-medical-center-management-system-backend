@@ -12,7 +12,7 @@ import {
 
 const router = express.Router();
 
-// Medicine Stock Routes
+// Medicine_Stock_Routes
 router.post("/add", addMedicine);                    // Adding new medicine(update quantity)
 router.get("/stock", getStock);                      //  all medicines details in stock
 router.post("/distribute", distributeMedicine);      // Distribute medicine --> to given students
