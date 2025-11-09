@@ -25,6 +25,7 @@ import entryRoutes from "./routes/entryRoutes.js";
 import doctorRoutes from "./routes/doctorRoutes.js";
 import studentMedicineRoutes from "./routes/studentMedicineRoutes.js";
 import medicineStockRoutes from "./routes/medicineStockRoutes.js";
+import universityMedicalRoutes from "./routes/universityMedicalRoutes.js";
 
 // Middleware 
 app.use(
@@ -53,6 +54,7 @@ app.use("/api/entries", entryRoutes);
 app.use("/api/doctor", doctorRoutes);
 app.use("/api/studentMedicine", studentMedicineRoutes);
 app.use("/api/medicineStock", medicineStockRoutes);
+app.use("/api/university-medical", universityMedicalRoutes);
 
 
 // Working Hours + Holidays 
