@@ -29,6 +29,7 @@ import studentMedicineRoutes from "./routes/studentMedicineRoutes.js";
 import medicineStockRoutes from "./routes/medicineStockRoutes.js";
 import universityMedicalRoutes from "./routes/universityMedicalRoutes.js";
 import otherMedicalRoutes from "./routes/otherMedicalRoutes.js";
+import studentMedicalRoutes from "./routes/studentMedicalRoutes.js";
 
 // Middleware
 app.use(cors({ origin: process.env.CLIENT_URL || "http://localhost:3000", credentials: true }));
@@ -55,6 +56,7 @@ app.use("/api/studentMedicine", studentMedicineRoutes);
 app.use("/api/medicineStock", medicineStockRoutes);
 app.use("/api/university-medical", universityMedicalRoutes);
 app.use("/api/other-medical", otherMedicalRoutes);
+app.use("/api/student-medical", studentMedicalRoutes);
 
 // Working hours + holidays
 const holidays = [
