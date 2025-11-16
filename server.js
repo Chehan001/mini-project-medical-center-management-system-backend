@@ -108,7 +108,7 @@ const createAdminIfMissing = async () => {
 
     if (existingAdmin) {
       if (FORCE_RESET?.toLowerCase() === "true") {
-        existingAdmin.password = await bcrypt.hash(ADMIN_PASSWORD, 10);
+     existingAdmin.password = await bcrypt.hash(ADMIN_PASSWORD, 10);
         existingAdmin.role = "admin";
         await existingAdmin.save();
         console.log("Admin password reset successfully.");
@@ -119,7 +119,8 @@ const createAdminIfMissing = async () => {
     await User.create({
       university_mail: ADMIN_UNIVERSITY_MAIL.toLowerCase(),
       university_reg_number: ADMIN_UNIVERSITY_REG_NUMBER.toUpperCase(),
-      password: await bcrypt.hash(ADMIN_PASSWORD, 10),
+      //password: await bcrypt.hash(ADMIN_PASSWORD, 10),
+      password:"admin123",  // Temporary password for testing --> MongoDB Atlas issue with bcrypt hashing
       role: "admin",
     });
     console.log("Admin user created successfully.");
